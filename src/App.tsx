@@ -6,14 +6,19 @@ import { AuthorList } from "./AuthorList";
 
 const App = () => {
   const [colorMap, setColors] = React.useState<ColorMap>({
-    a: ["blue", "red", "yellow"],
-    b: ["pink"],
-    c: ["green", "tan"]
+    a: [],
+    b: [],
+    c: [],
+    unranked: [
+      "https://www.ssbwiki.com/images/thumb/b/b3/Olimar_SSBU.png/500px-Olimar_SSBU.png",
+      "https://www.ssbwiki.com/images/thumb/b/b0/Olimar-Alt4_SSBU.png/500px-Olimar-Alt4_SSBU.png"
+    ]
   });
 
   return (
     <DragDropContext
       onDragEnd={({ destination, source }) => {
+        // // dropped outside the list
         if (!destination) {
           return;
         }
@@ -28,7 +33,7 @@ const App = () => {
             key={k}
             listId={k}
             listType="CARD"
-            colors={v}
+            urls={v}
           />
         ))}
       </div>
