@@ -1,7 +1,8 @@
 import * as React from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { generate } from "shortid";
-import { reorderRows } from "./reorder";
+import images from "./images.json";
+import { reorderRows, reorder } from "./reorder";
 import { ColorMap } from "./types";
 import { AuthorList } from "./AuthorList";
 
@@ -14,16 +15,14 @@ const App = () => {
     {
       id: unrankedId,
       label: "unranked",
-      urls: [
-        "https://www.ssbwiki.com/images/thumb/b/b3/Olimar_SSBU.png/500px-Olimar_SSBU.png",
-        "https://www.ssbwiki.com/images/thumb/b/b0/Olimar-Alt4_SSBU.png/500px-Olimar-Alt4_SSBU.png"
-      ]
+      urls: images
     }
   ]);
 
   return (
     <DragDropContext
       onDragEnd={({ destination, source }) => {
+        // // dropped outside the list
         if (!destination) {
           return;
         }
@@ -46,8 +45,17 @@ const App = () => {
         >
           add row
         </button>
-        {rows.map(row => (
+        {rows.map((row, i) => (
           <AuthorList
+            onLabelChange={newText =>
+              setRows(
+                rows.map(x =>
+                  x.id === row.id ? { ...row, label: newText } : x
+                )
+              )
+            }
+            onUp={() => setRows(reorder(rows, i, i - 1))}
+            onDown={() => setRows(reorder(rows, i, i + 1))}
             internalScroll
             key={row.id}
             listId={row.id}

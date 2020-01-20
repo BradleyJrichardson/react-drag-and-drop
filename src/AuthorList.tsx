@@ -8,24 +8,49 @@ interface Props {
   listType?: string;
   internalScroll?: boolean;
   isCombineEnabled?: boolean;
+  onUp: () => void;
+  onDown: () => void;
+  onLabelChange: (newText: string) => void;
 }
 
-export const AuthorList: React.FC<Props> = ({ listId, listType, row }) => {
+export const AuthorList: React.FC<Props> = ({
+  listId,
+  listType,
+  row,
+  onDown,
+  onUp,
+  onLabelChange
+}) => {
   return (
-    <Droppable
-      droppableId={listId}
-      type={listType}
-      direction="horizontal"
-      isCombineEnabled={false}
-    >
-      {dropProvided => (
-        <div {...dropProvided.droppableProps}>
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <div>
+        <div>
+          <button onClick={onUp}>up</button>
+        </div>
+        <input
+          value={row.label}
+          onChange={e => onLabelChange(e.target.value)}
+        />
+        <div>
+          <button onClick={onDown}>down</button>
+        </div>
+      </div>
+      <Droppable
+        droppableId={listId}
+        type={listType}
+        direction="horizontal"
+        isCombineEnabled={false}
+      >
+        {dropProvided => (
           <div
+            {...dropProvided.droppableProps}
             style={{
+              flex: 1,
               display: "flex",
-              backgroundColor: "#666",
+              backgroundColor: "pink",
               margin: 20,
-              minHeight: 60
+              minHeight: 60,
+              overflowX: "auto"
             }}
             ref={dropProvided.innerRef}
           >
@@ -37,15 +62,15 @@ export const AuthorList: React.FC<Props> = ({ listId, listType, row }) => {
                     {...dragProvided.draggableProps}
                     ref={dragProvided.innerRef}
                   >
-                    <img src={url} style={{ height: 50 }} />
+                    <img style={{ width: 50 }} src={url} />
                   </div>
                 )}
               </Draggable>
             ))}
             {dropProvided.placeholder}
           </div>
-        </div>
-      )}
-    </Droppable>
+        )}
+      </Droppable>
+    </div>
   );
 };
